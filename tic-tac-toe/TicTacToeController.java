@@ -10,11 +10,17 @@ public class TicTacToeController {
     }
 
     public void handlePlayerMove(int row, int col) {
-        if (model.makeMove(row, col, 'X')) {  // Spelaren använder 'X'
+        if (model.makeMove(row, col, 'X')) {  // Spelaren gör draget med 'X'
             view.updateBoard(model.getBoard());
-            if (model.checkWinner()) {
+            char winner = model.checkWinner();
+            if (winner == 'X') {
                 playerScore++; // Spelaren vinner
                 view.showWinner("Spelaren");
+                view.showScores(playerScore, computerScore);
+                model.resetBoard();
+            } else if (winner == 'O') {
+                computerScore++; // Datorn vinner
+                view.showWinner("Datorn");
                 view.showScores(playerScore, computerScore);
                 model.resetBoard();
             } else if (model.isBoardFull()) {
@@ -29,9 +35,15 @@ public class TicTacToeController {
     public void handleComputerMove() {
         model.makeComputerMove();  // Datorns drag
         view.updateBoard(model.getBoard());
-        if (model.checkWinner()) {
+        char winner = model.checkWinner();
+        if (winner == 'O') {
             computerScore++; // Datorn vinner
             view.showWinner("Datorn");
+            view.showScores(playerScore, computerScore);
+            model.resetBoard();
+        } else if (winner == 'X') {
+            playerScore++; // Spelaren vinner
+            view.showWinner("Spelaren");
             view.showScores(playerScore, computerScore);
             model.resetBoard();
         } else if (model.isBoardFull()) {
@@ -39,6 +51,8 @@ public class TicTacToeController {
             model.resetBoard();
         }
     }
+
+
 
     public void restartGame() {
         model.resetBoard();
